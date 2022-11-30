@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # https://hub.docker.com/_/php/
+  website-php:
+    environment:
+      - PHP_IDE_CONFIG=serverName=localhost
+    container_name: website-php
+    build:
+      context: ./api
+      dockerfile: docker/php/Dockerfile
+      cache_from:
+        - ./api/docker/php
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api:/srv/api:rw,cached
+      - /usr/local/lib
+    networks:
+      - website-network
+
+        # https://hub.docker.com/_/nginx/
+  website-nginx:
+    container_name: website-nginx
+    build:
+      context: ./api
+      dockerfile: docker/nginx/Dockerfile
+      cache_from:
+        - ./api/docker/nginx
+    depends_on:
+      - website-php
+      - website-db
+    environment:
+      - URL=http://localhost:3004/
+    volumes:
+      - ./api/public:/srv/api/public:ro 
+    ports:
+      - "127.0.0.1:3004:80"
+    expose:
+      - "8000"
+    networks:
+      - website-network
+
+  # https://hub.docker.com/_/mysql/
+  website-db:
+    image: mysql:8.0
+    container_name: website-db
+    environment:
+      - MYSQL_DATABASE=api
+      - MYSQL_USER=website_user
+      - MYSQL_PASSWORD=website_password
+    volumes:
+     - ./mysql:/var/lib/mysql
+    ports:
+      - '8082:3306'
+    networks:
+      - website-network
+
+  # https://hub.docker.com/r/mailhog/mailhog
+  website-mailhog:
+    image: mailhog/mailhog
+    container_name: website-mailhog
+    command: ["-smtp-bind-addr", "0.0.0.0:25"]
+    user: root
+    expose:
+      - 25
+      - 8025
+    ports:
+      - "127.0.0.1:8025:8025"
+    healthcheck:
+      test: echo | telnet 127.0.0.1 25
+    networks:
+      - website-network
+
+networks:
+  website-network:
+    external: true
+    driver: "bridge"
