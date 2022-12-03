@@ -71,8 +71,27 @@ services:
       test: echo | telnet 127.0.0.1 25
     networks:
       - website-network
+  client:
+      build: ./client
+      restart: on-failure
+      # below line starts the project
+      command: "npm run hot"
+      depends_on:
+        - api
+      networks:
+        - website-network
+      volumes:
+        # this will mount the ui folder which contains the code to the docker container
+        - ${PWD}/client:/var/www/client:delegated
+        # this will mount the node_modules folder for faster performance
+        - nodemodules:/var/www/client/node_modules
+      ports:
+      - "8080:8080"
 
 networks:
   website-network:
     external: true
     driver: "bridge"
+# volumes
+volumes:
+  nodemodules: {}
