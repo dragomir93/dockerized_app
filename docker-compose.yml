@@ -46,6 +46,7 @@ services:
     image: mysql:8.0
     container_name: website-db
     environment:
+      - MYSQL_ROOT_PASSWORD=website
       - MYSQL_DATABASE=api
       - MYSQL_USER=website_user
       - MYSQL_PASSWORD=website_password
@@ -72,20 +73,23 @@ services:
     networks:
       - website-network
   client:
-      build: ./client
-      restart: on-failure
-      # below line starts the project
-      command: "npm run hot"
-      depends_on:
-        - api
-      networks:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: docker/Dockerfile
+    restart: on-failure
+    depends_on:
+        - website-php
+        - website-nginx
+        - website-db
+    networks:
         - website-network
-      volumes:
+    volumes:
         # this will mount the ui folder which contains the code to the docker container
         - ${PWD}/client:/var/www/client:delegated
         # this will mount the node_modules folder for faster performance
         - nodemodules:/var/www/client/node_modules
-      ports:
+    ports:
       - "8080:8080"
 
 networks:

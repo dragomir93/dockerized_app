@@ -17,23 +17,23 @@ PHONY += up
 up:			## Launch project
 up:
 	$(call colorecho, "\nStarting project on $(OS)")
-	@docker-compose -f docker-compose.yml -f docker-compose.yml up -d
+	@docker compose -f docker-compose.yml -f docker-compose.yml up -d
 
 PHONY += production
 production:			## Launch Production project
 production:
 	$(call colorecho, "\nStarting project on $(OS)")
-	@docker-compose -f docker-compose.yml -f docker-compose.yml up --build -d
+	@docker compose -f docker-compose.yml -f docker-compose.yml up --build -d
 
 PHONY += down
 down: 			## Tear down project
 	$(call colorecho, "\nTear down project docker\n\n- Stoping all containers...\n")
-	@docker-compose down
+	@docker compose down
 
 PHONY += recreate
 recreate: 			## Recreate docker containers
 	$(call colorecho, "Recreate docker containers...\n")
-	@docker-compose -f docker-compose.yml -f docker-compose.yml up -d --build --force-recreate --remove-orphans
+	@docker compose -f docker-compose.yml -f docker-compose.yml up -d --build --force-recreate --remove-orphans
 
 PHONY += restart
 restart:		## Restart Docker
@@ -43,7 +43,7 @@ PHONY += ps
 ps:			## Docker containers process status
 ps:
 	$(call colorecho, "\nDocker containers process status $(OS)")
-	@docker-compose ps
+	@docker compose ps
 
 PHONY += messenger
 messenger:		## Run symfony messenger async worker
@@ -66,7 +66,7 @@ ssh-api:
 PHONY += logs
 logs:			## View Logs from Docker
 logs:
-	@docker-compose logs -f
+	@docker compose logs -f
 
 PHONY += appl
 appl:			## View Application Logs from Docker
