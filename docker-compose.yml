@@ -79,18 +79,16 @@ services:
   #     dockerfile: docker/Dockerfile
   #   restart: on-failure
   #   depends_on:
-  #       - website-php
-  #       - website-nginx
-  #       - website-db
+  #     - website-php
+  #     - website-nginx
+  #     - website-db
   #   networks:
-  #       - website-network
+  #     - website-network
   #   volumes:
-  #       # this will mount the ui folder which contains the code to the docker container
-  #       - ${PWD}/client:/client:delegated
-  #       # this will mount the node_modules folder for faster performance
-  #       - nodemodules:/client/node_modules
+  #     - /client:/client
+  #     - /client/node_modules
   #   ports:
-  #     - "8080:8080"
+  #     - '8080:8080'
 
 networks:
   website-network:
