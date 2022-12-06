@@ -72,30 +72,30 @@ services:
       test: echo | telnet 127.0.0.1 25
     networks:
       - website-network
-  client:
-    container_name: client
-    build:
-      context: ./client
-      dockerfile: docker/Dockerfile
-    restart: on-failure
-    depends_on:
-        - website-php
-        - website-nginx
-        - website-db
-    networks:
-        - website-network
-    volumes:
-        # this will mount the ui folder which contains the code to the docker container
-        - ${PWD}/client:/var/www/client:delegated
-        # this will mount the node_modules folder for faster performance
-        - nodemodules:/var/www/client/node_modules
-    ports:
-      - "8080:8080"
+  # client:
+  #   container_name: client
+  #   build:
+  #     context: ./client
+  #     dockerfile: docker/Dockerfile
+  #   restart: on-failure
+  #   depends_on:
+  #       - website-php
+  #       - website-nginx
+  #       - website-db
+  #   networks:
+  #       - website-network
+  #   volumes:
+  #       # this will mount the ui folder which contains the code to the docker container
+  #       - ${PWD}/client:/client:delegated
+  #       # this will mount the node_modules folder for faster performance
+  #       - nodemodules:/client/node_modules
+  #   ports:
+  #     - "8080:8080"
 
 networks:
   website-network:
     external: true
     driver: "bridge"
-# volumes
-volumes:
-  nodemodules: {}
+# # volumes
+# volumes:
+#   nodemodules: {}
