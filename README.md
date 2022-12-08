@@ -52,5 +52,4 @@ docker network prune -f
 docker volume ls -q | xargs docker volume rm -f
 ```
 #### Deploy
-  * Execute deploy script with `./deploy.sh $env_name $env_branch` so it should look something like this `./deploy.sh prod master`
   * In local enviroment only run `./deploy.sh` after all the containers are runnning and setted up properly
