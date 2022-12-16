@@ -2,7 +2,7 @@ ARG PHP_VERSION=8.0.5
 
 FROM php:${PHP_VERSION}-fpm-alpine
 
-# persistent / runtime deps
+#persistent / runtime deps
 RUN apk add --no-cache \
 		acl \
 		file \
@@ -11,7 +11,7 @@ RUN apk add --no-cache \
 		zip \
 	;
 
-ARG APCU_VERSION=5.1.20
+ARG APCU_VERSION=5.1.12
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -22,9 +22,8 @@ RUN set -eux; \
 		zlib-dev \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-	; \
-	\
-	docker-php-ext-install \
+	; 
+	RUN docker-php-ext-install \
 		intl \
 		pdo_mysql \
 		zip \
