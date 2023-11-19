@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.0.5
+ARG PHP_VERSION=8.1.15
 
 FROM php:${PHP_VERSION}-fpm-alpine
 
@@ -20,7 +20,7 @@ RUN set -eux; \
 		libintl \
 		mysql-dev \
 		zlib-dev \
-    && pecl install xdebug \
+    && pecl install xdebug-3.1.5 \
     && docker-php-ext-enable xdebug \
 	; 
 	RUN docker-php-ext-install \
